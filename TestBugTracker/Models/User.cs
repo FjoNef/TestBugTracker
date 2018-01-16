@@ -7,7 +7,7 @@ namespace TestBugTracker.Models
 {
     public class User
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
 
         public string Login { get; set; }
 
@@ -16,5 +16,10 @@ namespace TestBugTracker.Models
         public string LastName { get; set; }
 
         public string Password { get; set; }
+
+
+        public ICollection<TicketHistory> TicketHistories { get; set; }
+
+        public ICollection<Ticket> Tickets { get; set; }
     }
 }

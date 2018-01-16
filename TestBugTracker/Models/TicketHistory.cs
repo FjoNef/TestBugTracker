@@ -12,11 +12,11 @@ namespace TestBugTracker.Models
 
     public class TicketHistory
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
 
-        public int UserId { get; set; }
+        public int UserID { get; set; }
 
-        public int TicketId { get; set; }
+        public int TicketID { get; set; }
 
         public DateTime DateOfChange { get; set; }
 

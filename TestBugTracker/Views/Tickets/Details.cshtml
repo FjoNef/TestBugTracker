@@ -1,0 +1,60 @@
+﻿@model TestBugTracker.Models.Ticket
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Ticket</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DateCreation)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateCreation)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ShortDescription)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ShortDescription)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DetailedDescription)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DetailedDescription)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Urgency)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Urgency)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Criticality)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Criticality)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.ID)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-ID="@Model.ID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

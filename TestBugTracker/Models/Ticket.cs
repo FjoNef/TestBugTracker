@@ -22,9 +22,9 @@ namespace TestBugTracker.Models
 
     public class Ticket
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
 
-        public int UserId { get; set; }
+        public int? UserID { get; set; }
 
         public DateTime DateCreation { get; set; }
 
@@ -40,6 +40,8 @@ namespace TestBugTracker.Models
 
 
         public User User { get; set; }
+
+        public ICollection<TicketHistory> TicketHistories { get; set; }
 
     }
 }
