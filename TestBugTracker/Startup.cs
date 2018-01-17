@@ -39,7 +39,7 @@ namespace TestBugTracker
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Tickets/Error");
             }
 
             app.UseStaticFiles();

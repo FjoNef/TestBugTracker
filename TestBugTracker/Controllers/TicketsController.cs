@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TestBugTracker.Data;
 using TestBugTracker.Models;
+using System.Diagnostics;
 
 namespace TestBugTracker.Controllers
 {
@@ -22,6 +23,10 @@ namespace TestBugTracker.Controllers
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
+            if (true)
+            {
+                return RedirectToAction("Login", "Users");
+            }
             var trackerContext = _context.Tickets.Include(t => t.User);
             return View(await trackerContext.ToListAsync());
         }
@@ -155,6 +160,11 @@ namespace TestBugTracker.Controllers
         private bool TicketExists(int ID)
         {
             return _context.Tickets.Any(e => e.ID == ID);
+        }
+
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
