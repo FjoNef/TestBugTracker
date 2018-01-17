@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,19 +13,27 @@ namespace TestBugTracker.Models
 
     public enum Urgency
     {
-        VeryHigh, High, Medium, Low
+        [Display(Name="Very High")]
+        VeryHigh,
+        High,
+        Medium,
+        Low
     }
 
     public enum Criticality
     {
-        Fatal, Critical, Uncritical, ChangeRequest
+        Fatal,
+        Critical,
+        Uncritical,
+        [Display(Name = "Change Request")]
+        ChangeRequest
     }
 
     public class Ticket
     {
         public int ID { get; set; }
 
-        public int? UserID { get; set; }
+        public int UserID { get; set; }
 
         public DateTime DateCreation { get; set; }
 

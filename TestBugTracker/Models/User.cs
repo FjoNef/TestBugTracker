@@ -25,9 +25,6 @@ namespace TestBugTracker.Models
         public ICollection<Ticket> Tickets { get; set; }
 
 
-        public string GetFullName()
-        {
-            return FirstName + " " + LastName;
-        }
+        public string FullName => FirstName + " " + LastName;
     }
 }

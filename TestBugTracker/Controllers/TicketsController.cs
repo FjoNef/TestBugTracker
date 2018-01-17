@@ -51,7 +51,6 @@ namespace TestBugTracker.Controllers
         // GET: Tickets/Create
         public IActionResult Create()
         {
-            //ViewData["UrgencyList"] = new SelectList(, "ID", "ID");
             return View();
         }
 
@@ -62,13 +61,15 @@ namespace TestBugTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,UserID,DateCreation,ShortDescription,DetailedDescription,Status,Urgency,Criticality")] Ticket ticket)
         {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Login == HttpContext.User.Identity.Name);
+            ticket.UserID = user.ID;
+            ticket.DateCreation=DateTime.Now;
             if (ModelState.IsValid)
             {
                 _context.Add(ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserID"] = new SelectList(_context.Users, "ID", "ID", ticket.UserID);
             return View(ticket);
         }
 
