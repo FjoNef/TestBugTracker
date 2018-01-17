@@ -6,9 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TestBugTracker.Data;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace TestBugTracker.Models
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly TrackerContext _context;
@@ -43,6 +48,7 @@ namespace TestBugTracker.Models
         }
 
         // GET: Users/Create
+        [AllowAnonymous]
         public IActionResult Create()
         {
             return View();
@@ -53,6 +59,7 @@ namespace TestBugTracker.Models
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([Bind("ID,Login,FirstName,LastName,Password")] User user)
         {
             if (ModelState.IsValid)
@@ -147,6 +154,49 @@ namespace TestBugTracker.Models
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.ID == id);
+        }
+
+        [AllowAnonymous]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([Bind("ID,Login,FirstName,LastName,Password")] User user)
+        {
+            if (ModelState.IsValid)
+            {
+                var foundedUser = await _context.Users.SingleOrDefaultAsync(m => m.Login==user.Login && m.Password==user.Password);
+                if (foundedUser != null)
+                {
+                    await Authenticate(user.Login);
+
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError("", "Incorrect login or password");
+            }            
+            return View(user);
+        }
+
+        private async Task Authenticate(string userName)
+        {            
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userName)
+            };
+            
+            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Account");
         }
     }
 }

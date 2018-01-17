@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using TestBugTracker.Data;
 using TestBugTracker.Models;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TestBugTracker.Controllers
 {
+    [Authorize]
     public class TicketsController : Controller
     {
         private readonly TrackerContext _context;
@@ -22,11 +24,7 @@ namespace TestBugTracker.Controllers
 
         // GET: Tickets
         public async Task<IActionResult> Index()
-        {
-            if (true)
-            {
-                return RedirectToAction("Login", "Users");
-            }
+        {            
             var trackerContext = _context.Tickets.Include(t => t.User);
             return View(await trackerContext.ToListAsync());
         }
@@ -53,7 +51,7 @@ namespace TestBugTracker.Controllers
         // GET: Tickets/Create
         public IActionResult Create()
         {
-            ViewData["UserID"] = new SelectList(_context.Users, "ID", "ID");
+            //ViewData["UrgencyList"] = new SelectList(, "ID", "ID");
             return View();
         }
 
