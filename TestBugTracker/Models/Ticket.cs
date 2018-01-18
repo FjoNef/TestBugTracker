@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using TestBugTracker.Interfaces;
+using TestBugTracker.Models.TicketStatuses;
 
 namespace TestBugTracker.Models
 {
@@ -13,7 +16,7 @@ namespace TestBugTracker.Models
 
     public enum Urgency
     {
-        [Display(Name="Very High")]
+        [Display(Name = "Very High")]
         VeryHigh,
         High,
         Medium,
@@ -47,10 +50,41 @@ namespace TestBugTracker.Models
 
         public Criticality Criticality { get; set; }
 
+        [NotMapped]
+        public ITicketStatus TicketStatus { get; set; }
+
 
         public User User { get; set; }
 
         public ICollection<TicketHistory> TicketHistories { get; set; }
 
+        public Ticket()
+        {
+            switch (Status)
+            {
+                case Status.New:
+                    TicketStatus = new TicketSatusNew();
+                    break;
+                case Status.Opened:
+                    TicketStatus = new TicketStatusOpen();
+                    break;
+                case Status.Solved:
+                    TicketStatus = new TicketStatusSolved();
+                    break;
+                case Status.Closed:
+                    TicketStatus = new TicketStatusClosed();
+                    break;
+            }
+        }
+
+        public void UpStatus()
+        {
+            TicketStatus.UpStatus(this);
+        }
+
+        public void DownStatus()
+        {
+            TicketStatus.DownStatus(this);
+        }
     }
 }

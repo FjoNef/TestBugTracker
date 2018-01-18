@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TestBugTracker.Data;
 using TestBugTracker.Models;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Authorization;
 
 namespace TestBugTracker.Controllers
@@ -24,7 +25,7 @@ namespace TestBugTracker.Controllers
 
         // GET: Tickets
         public async Task<IActionResult> Index()
-        {            
+        {
             var trackerContext = _context.Tickets.Include(t => t.User);
             return View(await trackerContext.ToListAsync());
         }
@@ -39,6 +40,7 @@ namespace TestBugTracker.Controllers
 
             var ticket = await _context.Tickets
                 .Include(t => t.User)
+                .Include(t => t.TicketHistories)
                 .SingleOrDefaultAsync(m => m.ID == ID);
             if (ticket == null)
             {
@@ -61,13 +63,14 @@ namespace TestBugTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,UserID,DateCreation,ShortDescription,DetailedDescription,Status,Urgency,Criticality")] Ticket ticket)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Login == HttpContext.User.Identity.Name);
-            ticket.UserID = user.ID;
-            ticket.DateCreation=DateTime.Now;
             if (ModelState.IsValid)
             {
+                var user = await _context.Users.SingleOrDefaultAsync(u => u.Login == HttpContext.User.Identity.Name);
+                ticket.UserID = user.ID;
+                ticket.DateCreation = DateTime.Now;
                 _context.Add(ticket);
                 await _context.SaveChangesAsync();
+                await CreateHistory(ticket, "Created new ticket");
                 return RedirectToAction(nameof(Index));
             }
             return View(ticket);
@@ -81,12 +84,13 @@ namespace TestBugTracker.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Tickets.SingleOrDefaultAsync(m => m.ID == ID);
+            var ticket = await _context.Tickets
+                .Include(t => t.TicketHistories)
+                .SingleOrDefaultAsync(m => m.ID == ID);
             if (ticket == null)
             {
                 return NotFound();
             }
-            ViewData["UserID"] = new SelectList(_context.Users, "ID", "ID", ticket.UserID);
             return View(ticket);
         }
 
@@ -156,6 +160,35 @@ namespace TestBugTracker.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult ChangeStatus(int? ID)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatus(int ID, string comment, bool down)
+        {
+            var ticket = await _context.Tickets.SingleOrDefaultAsync(m => m.ID == ID);
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            if (down)
+            {
+                ticket.DownStatus();
+            }
+            else
+            {
+                ticket.UpStatus();
+            }
+
+            _context.Update(ticket);
+            await _context.SaveChangesAsync();
+            await CreateHistory(ticket, comment);
+            return RedirectToAction(nameof(Index));
+        }
+
         private bool TicketExists(int ID)
         {
             return _context.Tickets.Any(e => e.ID == ID);
@@ -164,6 +197,21 @@ namespace TestBugTracker.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private async Task CreateHistory(Ticket ticket, string comment)
+        {
+            var history = new TicketHistory();
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Login == HttpContext.User.Identity.Name);
+
+            history.DateOfChange = DateTime.Now;
+            history.Action = (Models.Action)(int)ticket.Status;
+            history.UserID = user.ID;
+            history.TicketID = ticket.ID;
+            history.Comment = comment;
+
+            _context.Add(history);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -54,6 +54,46 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<h4>Ticket History</h4>
+<hr />
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TicketHistories.First().Action)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TicketHistories.First().User)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TicketHistories.First().DateOfChange)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TicketHistories.First().Comment)
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.TicketHistories.OrderByDescending(t => t.DateOfChange))
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Action)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateOfChange)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
