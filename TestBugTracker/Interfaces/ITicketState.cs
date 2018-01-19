@@ -6,7 +6,7 @@ using TestBugTracker.Models;
 
 namespace TestBugTracker.Interfaces
 {
-    public interface ITicketStatus
+    public interface ITicketState
     {
         bool IsOpenable { get; }
         void UpStatus(Ticket ticket);

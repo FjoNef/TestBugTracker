@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using TestBugTracker.Interfaces;
 
-namespace TestBugTracker.Models.TicketStatuses
+namespace TestBugTracker.Models.TicketStates
 {
-    public class TicketSatusNew : ITicketStatus
+    public class TicketStateNew : ITicketState
     {
         public bool IsOpenable => false;
 
@@ -15,7 +15,6 @@ namespace TestBugTracker.Models.TicketStatuses
         public void UpStatus(Ticket ticket)
         {
             ticket.Status = Status.Opened;
-            ticket.TicketStatus = new TicketSatusNew();
         }
     }
 }

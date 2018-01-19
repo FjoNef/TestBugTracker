@@ -4,21 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using TestBugTracker.Interfaces;
 
-namespace TestBugTracker.Models.TicketStatuses
+namespace TestBugTracker.Models.TicketStates
 {
-    public class TicketStatusOpen : ITicketStatus
+    public class TicketStateSolved : ITicketState
     {
-        public bool IsOpenable => false;
+        public bool IsOpenable => true;
 
         public void DownStatus(Ticket ticket)
         {
-            
+            ticket.Status = Status.Opened;
         }
 
         public void UpStatus(Ticket ticket)
         {
-            ticket.Status = Status.Solved;
-            ticket.TicketStatus = new TicketStatusSolved();
+            ticket.Status = Status.Closed;
         }
     }
 }

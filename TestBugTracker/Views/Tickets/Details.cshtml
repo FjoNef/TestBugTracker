@@ -57,21 +57,25 @@
 
 @if (Model.Status != Status.Closed)
 {
-    <div>
-        <form asp-action="ChangeStatus">
-            <input type="hidden" asp-for="ID" />
-            <div class="form-group">
-                <label class="control-label">Comment</label>
-                <input type="text" required="" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="@Html.DisplayFor(model => model.Status+1)" class="btn btn-default" />
-                @if (Model.TicketStatus.IsOpenable)
-                {
-
-                }
-            </div>
-        </form>
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="ChangeStatus">
+                
+                    <input type="hidden" asp-for="ID" />
+                    <div class="form-group">
+                        <label class="control-label">Comment</label>
+                        <input class="form-control" required  type="text" name="Comment" />
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" name="down" value="false" class="btn btn-default">@(Model.Status + 1)</button>
+                        @if (Model.TicketStatus.IsOpenable)
+                        {
+                            <button type="submit" name="down" value="true" class="btn btn-default">@(Model.Status - 1)</button>
+                        }
+                    </div>
+                
+            </form>
+        </div>
     </div>
 }
 

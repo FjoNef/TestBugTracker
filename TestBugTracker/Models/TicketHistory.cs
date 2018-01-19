@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,8 +19,11 @@ namespace TestBugTracker.Models
 
         public int TicketID { get; set; }
 
+        [Display(Name = "Date Of Changing")]
         public DateTime DateOfChange { get; set; }
 
+        [StringLength(450)]
+        [Required]
         public string Comment { get; set; }
 
         public Action Action { get; set; }

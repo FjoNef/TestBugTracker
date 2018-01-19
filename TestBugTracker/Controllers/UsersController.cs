@@ -174,7 +174,7 @@ namespace TestBugTracker.Models
                 {
                     await Authenticate(user.Login);
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Tickets");
                 }
                 ModelState.AddModelError("", "Incorrect login or password");
             }            
@@ -196,7 +196,7 @@ namespace TestBugTracker.Models
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Users");
+            return RedirectToAction("Login");
         }
     }
 }

@@ -10,13 +10,20 @@ namespace TestBugTracker.Models
     {
         public int ID { get; set; }
 
+        [StringLength(50)]
+        [Required]
         public string Login { get; set; }
 
+        [StringLength(100)]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
+        [StringLength(100)]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
         
         [DataType(DataType.Password)]
+        [Required]
         public string Password { get; set; }
 
 

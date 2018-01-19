@@ -166,7 +166,7 @@ namespace TestBugTracker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeStatus(int ID, string comment, bool down)
+        public async Task<IActionResult> ChangeStatus(int ID, string comment, string down)
         {
             var ticket = await _context.Tickets.SingleOrDefaultAsync(m => m.ID == ID);
             if (ticket == null)
@@ -174,7 +174,7 @@ namespace TestBugTracker.Controllers
                 return NotFound();
             }
 
-            if (down)
+            if (Boolean.Parse(down))
             {
                 ticket.DownStatus();
             }
