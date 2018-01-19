@@ -18,6 +18,12 @@ namespace TestBugTracker.Data
             modelBuilder.Entity<User>()
                 .HasAlternateKey(c => c.Login)
                 .HasName("AlternateKey_Login");
+            
+            modelBuilder.Entity<TicketHistory>()
+                .HasOne(u => u.User)
+                .WithMany(u => u.TicketHistories)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

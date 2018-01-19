@@ -13,11 +13,9 @@
         <form asp-action="Edit">
             <div asp-valIDation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
-            <div class="form-group">
-                <label asp-for="DateCreation" class="control-label"></label>
-                <input asp-for="DateCreation" class="form-control" />
-                <span asp-valIDation-for="DateCreation" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="UserID" />
+            <input type="hidden" asp-for="DateCreation" />
+            <input type="hidden" asp-for="Status" />            
             <div class="form-group">
                 <label asp-for="ShortDescription" class="control-label"></label>
                 <input asp-for="ShortDescription" class="form-control" />
@@ -25,13 +23,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="DetailedDescription" class="control-label"></label>
-                <input asp-for="DetailedDescription" class="form-control" />
+                <textarea asp-for="DetailedDescription" class="form-control"></textarea>
                 <span asp-valIDation-for="DetailedDescription" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
-                <span asp-valIDation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Urgency" class="control-label"></label>
@@ -49,6 +42,30 @@
         </form>
     </div>
 </div>
+
+@if (Model.Status != Status.Closed)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="ChangeStatus">
+
+                <input type="hidden" asp-for="ID" />
+                <div class="form-group">
+                    <label class="control-label">Comment</label>
+                    <textarea class="form-control" required name="Comment"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" name="down" value="false" class="btn btn-default">@(Model.Status + 1)</button>
+                    @if (Model.TicketStatus.IsOpenable)
+                    {
+                        <button type="submit" name="down" value="true" class="btn btn-default">@(Model.Status - 1)</button>
+                    }
+                </div>
+
+            </form>
+        </div>
+    </div>
+}
 
 <div>
     <a asp-action="Index">Back to List</a>

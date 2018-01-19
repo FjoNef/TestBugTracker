@@ -4,7 +4,7 @@
     ViewData["Title"] = "Tickets";
 }
 
-<h2>Index</h2>
+<h2>Tickets</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,60 +12,61 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateCreation)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ShortDescription)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DetailedDescription)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Urgency)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Criticality)
-                </th>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                <a asp-action="Index" asp-route-sortColumn="date" asp-route-asc="@ViewData["SortOrder"]">@Html.DisplayNameFor(model => model.DateCreation)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortColumn="short" asp-route-asc="@ViewData["SortOrder"]">@Html.DisplayNameFor(model => model.ShortDescription)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortColumn="detailed" asp-route-asc="@ViewData["SortOrder"]">@Html.DisplayNameFor(model => model.DetailedDescription)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortColumn="status" asp-route-asc="@ViewData["SortOrder"]">@Html.DisplayNameFor(model => model.Status)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortColumn="urgency" asp-route-asc="@ViewData["SortOrder"]">@Html.DisplayNameFor(model => model.Urgency)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortColumn="criticality" asp-route-asc="@ViewData["SortOrder"]">@Html.DisplayNameFor(model => model.Criticality)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortColumn="user" asp-route-asc="@ViewData["SortOrder"]">@Html.DisplayNameFor(model => model.User)</a>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ShortDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DetailedDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Urgency)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Criticality)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.FullName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-ID="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-ID="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-ID="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShortDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DetailedDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Urgency)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Criticality)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FullName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-ID="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-ID="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-ID="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

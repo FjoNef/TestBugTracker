@@ -24,7 +24,7 @@ namespace TestBugTracker
                 try
                 {
                     var context = services.GetRequiredService<TrackerContext>();
-                    DbInitializer.Initialize(context);
+                    context.Database.EnsureCreated();
                 }
                 catch (Exception ex)
                 {

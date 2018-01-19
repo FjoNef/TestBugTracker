@@ -24,10 +24,65 @@ namespace TestBugTracker.Controllers
         }
 
         // GET: Tickets
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string asc, string sortColumn)
         {
-            var trackerContext = _context.Tickets.Include(t => t.User);
-            return View(await trackerContext.ToListAsync());
+            bool ascending = true;
+            string column = "date";
+            if (!String.IsNullOrEmpty(asc))
+            {                
+                ascending = Convert.ToBoolean(asc);
+            }
+            if (!String.IsNullOrEmpty(sortColumn))
+            {
+                column = sortColumn;
+            }
+            var tickets = _context.Tickets.Include(t => t.User).OrderByDescending(t=>t.DateCreation);
+
+            switch (column)
+            {
+                case "short":
+                    if (ascending)
+                        tickets = tickets.OrderBy(t => t.ShortDescription);
+                    else
+                        tickets = tickets.OrderByDescending(t => t.ShortDescription);                    
+                    break;
+                case "detailed":
+                    if (ascending)
+                        tickets = tickets.OrderBy(t => t.DetailedDescription);
+                    else
+                        tickets = tickets.OrderByDescending(t => t.DetailedDescription);
+                    break;
+                case "user":
+                    if (ascending)
+                        tickets = tickets.OrderBy(t => t.User.FullName);
+                    else
+                        tickets = tickets.OrderByDescending(t => t.User.FullName);
+                    break;
+                case "status":
+                    if (ascending)
+                        tickets = tickets.OrderBy(t => t.Status);
+                    else
+                        tickets = tickets.OrderByDescending(t => t.Status);
+                    break;
+                case "urgency":
+                    if (ascending)
+                        tickets = tickets.OrderBy(t => t.Urgency);
+                    else
+                        tickets = tickets.OrderByDescending(t => t.Urgency);
+                    break;
+                case "criticality":
+                    if (ascending)
+                        tickets = tickets.OrderBy(t => t.Criticality);
+                    else
+                        tickets = tickets.OrderByDescending(t => t.Criticality);
+                    break;
+                default:
+                    if (ascending)
+                        tickets = tickets.OrderBy(t => t.DateCreation);
+                    break;
+            }
+            ViewData["SortOrder"] = (!ascending).ToString();
+            return View(await tickets.ToListAsync());
         }
 
         // GET: Tickets/Details/5
@@ -39,8 +94,8 @@ namespace TestBugTracker.Controllers
             }
 
             var ticket = await _context.Tickets
-                .Include(t => t.User)
                 .Include(t => t.TicketHistories)
+                    .ThenInclude(h => h.User)
                 .SingleOrDefaultAsync(m => m.ID == ID);
             if (ticket == null)
             {
@@ -86,6 +141,7 @@ namespace TestBugTracker.Controllers
 
             var ticket = await _context.Tickets
                 .Include(t => t.TicketHistories)
+                    .ThenInclude(h=>h.User)
                 .SingleOrDefaultAsync(m => m.ID == ID);
             if (ticket == null)
             {
@@ -126,7 +182,6 @@ namespace TestBugTracker.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserID"] = new SelectList(_context.Users, "ID", "ID", ticket.UserID);
             return View(ticket);
         }
 

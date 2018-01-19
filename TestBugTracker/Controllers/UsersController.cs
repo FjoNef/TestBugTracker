@@ -64,9 +64,13 @@ namespace TestBugTracker.Models
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (!_context.Users.Any(u => u.Login == user.Login))
+                {                    
+                    _context.Add(user);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                ModelState.AddModelError("", "This login is already taken");
             }
             return View(user);
         }
